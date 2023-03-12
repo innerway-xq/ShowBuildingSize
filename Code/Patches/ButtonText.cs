@@ -6,39 +6,24 @@
 
 
     [HarmonyPatch(typeof(GeneratedScrollPanel), nameof(GeneratedScrollPanel.OnTooltipEnter))]
-    class HideButtonText
+    class ButtonText
     {
 
-        private static void hideButtonText(UIComponent button, UIMouseEventParameter p)
+        private static void HideButtonText(UIComponent button, UIMouseEventParameter p)
         {
             if (button != null)
-                (button as UIButton).text = "";
-            PrefabInfo prefabinfo = button.objectUserData as PrefabInfo;
-            UISprite uisprite = button.components[0] as UISprite;
-            if (uisprite != null)
             {
-                if (button.isEnabled)
+                (button as UIButton).text = "";
+                UISprite uisprite = button.components[0] as UISprite;
+                if (uisprite != null)
                 {
-                    if (!prefabinfo.CanBeBuilt())
-                    {
-                        uisprite.spriteName = "ThumbnailBuildingAlreadyBuilt";
-                        uisprite.enabled = true;
-                    }
-                    else
-                    {
-                        uisprite.spriteName = "ThumbnailBuildingNoMoney";
-                        int constructionCost = prefabinfo.GetConstructionCost();
-                        uisprite.enabled = (Singleton<EconomyManager>.instance.PeekResource(EconomyManager.Resource.Construction, constructionCost) != constructionCost);
-                    }
-                }
-                else
-                {
-                    uisprite.enabled = false;
+                    uisprite.enabled = true;
                 }
             }
+                
         }
 
-        private static void showButtonText(UIButton button)
+        private static void ShowButtonText(UIButton button)
         {
             PrefabInfo prefabinfo = button.objectUserData as PrefabInfo;
             string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
@@ -52,8 +37,8 @@
                 UIButton uibutton = p.source as UIButton;
                 if (uibutton != null && uibutton.objectUserData != null && uibutton.objectUserData.GetType() == typeof(BuildingInfo))
                 {
-                    uibutton.eventMouseLeave += hideButtonText;
-                    showButtonText(uibutton);
+                    uibutton.eventMouseLeave += HideButtonText;
+                    ShowButtonText(uibutton);
                     UISprite uisprite = uibutton.components[0] as UISprite;
                     if (uisprite != null)
                     {
