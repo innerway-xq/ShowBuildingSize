@@ -40,13 +40,9 @@
 
         private static void showButtonText(UIButton button)
         {
-            if(button != null && button.objectUserData != null && button.objectUserData.GetType() == typeof(BuildingInfo))
-            {
-                PrefabInfo prefabinfo = button.objectUserData as PrefabInfo;
-                string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
-                button.text = size_str;
-            }
-
+            PrefabInfo prefabinfo = button.objectUserData as PrefabInfo;
+            string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
+            button.text = size_str;
         }
 
         static void Postfix(UIMouseEventParameter p)
@@ -54,13 +50,17 @@
             if (p != null && p.source is UIButton)
             {
                 UIButton uibutton = p.source as UIButton;
-                uibutton.eventMouseLeave += hideButtonText;
-                showButtonText(uibutton);
-                UISprite uisprite = uibutton.components[0] as UISprite;
-                if (uisprite != null)
+                if (uibutton != null && uibutton.objectUserData != null && uibutton.objectUserData.GetType() == typeof(BuildingInfo))
                 {
-                    uisprite.enabled = false;
+                    uibutton.eventMouseLeave += hideButtonText;
+                    showButtonText(uibutton);
+                    UISprite uisprite = uibutton.components[0] as UISprite;
+                    if (uisprite != null)
+                    {
+                        uisprite.enabled = false;
+                    }
                 }
+                    
             }
         }
     }
