@@ -1,20 +1,21 @@
 ﻿namespace ShowBuildingSize
 {
+    using System;
     using ColossalFramework;
     using ColossalFramework.UI;
     using HarmonyLib;
 
 
-    [HarmonyPatch(typeof(GeneratedScrollPanel), nameof(GeneratedScrollPanel.OnTooltipEnter))]
+    [HarmonyPatch(typeof(GeneratedScrollPanel), nameof(GeneratedScrollPanel.OnTooltipEnter), new Type[] { typeof(UIButton), typeof(PrefabInfo)})]
     class ButtonText
     {
 
-        private static void HideButtonText(UIComponent button, UIMouseEventParameter p)
+        private static void HideButtonText(UIComponent component, UIMouseEventParameter eventParam)
         {
-            if (button != null)
+            if (component != null)
             {
-                (button as UIButton).text = "";
-                UISprite uisprite = button.components[0] as UISprite;
+                (component as UIButton).text = "";
+                UISprite uisprite = component.components[0] as UISprite;
                 if (uisprite != null)
                 {
                     uisprite.enabled = true;
@@ -30,23 +31,20 @@
             button.text = size_str;
         }
 
-        static void Postfix(UIMouseEventParameter p)
+        static void Postfix(UIButton source, PrefabInfo info)
         {
-            if (p != null && p.source is UIButton)
+            if (source != null && info != null && info.GetType() == typeof(BuildingInfo))
             {
-                UIButton uibutton = p.source as UIButton;
-                if (uibutton != null && uibutton.objectUserData != null && uibutton.objectUserData.GetType() == typeof(BuildingInfo))
+                source.eventMouseLeave += HideButtonText;
+                ShowButtonText(source);
+                UISprite uisprite = source.components[0] as UISprite;
+                if (uisprite != null)
                 {
-                    uibutton.eventMouseLeave += HideButtonText;
-                    ShowButtonText(uibutton);
-                    UISprite uisprite = uibutton.components[0] as UISprite;
-                    if (uisprite != null)
-                    {
-                        uisprite.enabled = false;
-                    }
+                    uisprite.enabled = false;
                 }
-                    
             }
+                    
+            
         }
     }
 
