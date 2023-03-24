@@ -23,10 +23,9 @@
                         uisprite.enabled = true;
                     }
 
-                    if (component.Find<UILabel>("SizeLabel"))
+                    if (component.Find("SizeLabel") != null)
                     {
-                        UILabel sizelabel = component.Find<UILabel>("SizeLabel");
-                        sizelabel.isVisible = false;
+                        component.Find("SizeLabel").Hide();
                     }
                 }
 
@@ -51,7 +50,7 @@
                         uisprite.enabled = false;
                     }
 
-                    if (!component.Find<UILabel>("SizeLabel"))
+                    if (component.Find("SizeLabel") == null)
                     {
                         UILabel sizelabel;
                         sizelabel = component.AddUIComponent<UILabel>();
@@ -64,7 +63,7 @@
                     else
                     {
                         UILabel sizelabel = component.Find<UILabel>("SizeLabel");
-                        sizelabel.isVisible = true;
+                        sizelabel.Show();
                         sizelabel.text = size_str;
                     }
                     
@@ -79,13 +78,19 @@
             if (__instance.GetType() == typeof(UIButton) && __instance.objectUserData != null)
             {
 
-                
                 if (__instance.objectUserData.GetType() == typeof(BuildingInfo))
                 {
                     __instance.eventMouseLeave -= HideButtonText;
                     __instance.eventMouseLeave += HideButtonText;
                     __instance.eventMouseEnter -= ShowButtonText;
                     __instance.eventMouseEnter += ShowButtonText;
+                }
+                else
+                {
+                    if (__instance.Find("SizeLabel") != null)
+                    {
+                        __instance.Find("SizeLabel").Hide();
+                    }
                 }
             }
             
