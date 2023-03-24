@@ -14,7 +14,7 @@
         {
             if (component != null && component.GetType() == typeof(UIButton))
             {
-                if (component.objectUserData != null && component.objectUserData.GetType() == typeof(BuildingInfo))
+                if ((component.objectUserData as UIButton).objectUserData != null && (component.objectUserData as UIButton).objectUserData.GetType() == typeof(BuildingInfo))
                 {
 
                     UISprite uisprite = component.components[0] as UISprite;
@@ -23,9 +23,9 @@
                         uisprite.enabled = true;
                     }
 
-                    if (component.Find("SizeLabel") != null)
+                    if (component.Find("UILabel") != null)
                     {
-                        component.Find("SizeLabel").Hide();
+                        component.Find("UILabel").Hide();
                     }
                 }
 
@@ -38,9 +38,9 @@
 
             if (component != null)
             {
-                if (component.objectUserData != null && component.objectUserData.GetType() == typeof(BuildingInfo))
+                if ((component.objectUserData as UIButton).objectUserData != null && (component.objectUserData as UIButton).objectUserData.GetType() == typeof(BuildingInfo))
                 {
-                    UIButton uibutton = component as UIButton;
+                    UIButton uibutton = component.objectUserData as UIButton;
                     PrefabInfo prefabinfo = uibutton.objectUserData as PrefabInfo;
                     string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
 
@@ -50,7 +50,7 @@
                         uisprite.enabled = false;
                     }
 
-                    if (component.Find("SizeLabel") == null)
+                    if (component.Find("UILabel") == null)
                     {
                         UILabel sizelabel;
                         sizelabel = component.AddUIComponent<UILabel>();
@@ -62,7 +62,7 @@
                     }
                     else
                     {
-                        UILabel sizelabel = component.Find<UILabel>("SizeLabel");
+                        UILabel sizelabel = component.Find<UILabel>("UILabel");
                         sizelabel.Show();
                         sizelabel.text = size_str;
                     }
