@@ -7,7 +7,7 @@
     using HarmonyLib;
     using UnityEngine;
 
-    [HarmonyPatch(typeof(UIComponent), nameof(UIComponent.Invalidate))]
+    [HarmonyPatch(typeof(UIButton), nameof(UIButton.Invalidate))]
     class ButtonText
     {
         private static void HideButtonText(UIComponent component, UIMouseEventParameter eventParam)
@@ -73,7 +73,7 @@
 
         }
 
-        static void Postfix(UIComponent __instance)
+        static void Postfix(UIButton __instance)
         {
             if (__instance.GetType() == typeof(UIButton) && __instance.objectUserData != null)
             {
