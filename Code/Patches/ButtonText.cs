@@ -3,51 +3,93 @@
     using System;
     using ColossalFramework;
     using ColossalFramework.UI;
+    using AlgernonCommons;
     using HarmonyLib;
+    using UnityEngine;
 
-
-    [HarmonyPatch(typeof(GeneratedScrollPanel), nameof(GeneratedScrollPanel.OnTooltipEnter), new Type[] { typeof(UIButton), typeof(PrefabInfo)})]
+    [HarmonyPatch(typeof(UIComponent), nameof(UIComponent.Invalidate))]
     class ButtonText
     {
-
         private static void HideButtonText(UIComponent component, UIMouseEventParameter eventParam)
         {
-            if (component != null)
+            if (component != null && component.GetType() == typeof(UIButton))
             {
-                (component as UIButton).text = "";
-                UISprite uisprite = component.components[0] as UISprite;
-                if (uisprite != null)
+                if (component.objectUserData != null && component.objectUserData.GetType() == typeof(BuildingInfo))
                 {
-                    uisprite.enabled = true;
+                    
+                    UISprite uisprite = component.components[0] as UISprite;
+                    if (uisprite != null)
+                    {
+                        uisprite.enabled = true;
+                    }
+
+                    if (component.Find<UILabel>("SizeLabel"))
+                    {
+                        UILabel sizelabel = component.Find<UILabel>("SizeLabel");
+                        sizelabel.isVisible = false;
+                    }
                 }
+
             }
                 
         }
 
-        private static void ShowButtonText(UIButton button)
+        private static void ShowButtonText(UIComponent component, UIMouseEventParameter eventParam)
         {
-            PrefabInfo prefabinfo = button.objectUserData as PrefabInfo;
-            string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
-            button.text = size_str;
-        }
 
-        static void Postfix(UIButton source, PrefabInfo info)
-        {
-            if (source != null && info != null && info.GetType() == typeof(BuildingInfo))
+            if (component != null)
             {
-                source.eventMouseLeave += HideButtonText;
-                ShowButtonText(source);
-                UISprite uisprite = source.components[0] as UISprite;
-                if (uisprite != null)
+                if (component.objectUserData != null && component.objectUserData.GetType() == typeof(BuildingInfo))
                 {
-                    uisprite.enabled = false;
+                    UIButton uibutton = component as UIButton;
+                    PrefabInfo prefabinfo = uibutton.objectUserData as PrefabInfo;
+                    string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
+
+                    UISprite uisprite = component.components[0] as UISprite;
+                    if (uisprite != null)
+                    {
+                        uisprite.enabled = false;
+                    }
+
+                    if (!component.Find<UILabel>("SizeLabel"))
+                    {
+                        UILabel sizelabel;
+                        sizelabel = component.AddUIComponent<UILabel>();
+                        sizelabel.isVisible = true;
+                        sizelabel.name = "SizeLabel";
+                        sizelabel.textScale = 1f;
+                        sizelabel.relativePosition = new Vector3(0, component.height - 20);
+                        sizelabel.text = size_str;
+                    }
+                    else
+                    {
+                        UILabel sizelabel = component.Find<UILabel>("SizeLabel");
+                        sizelabel.isVisible = true;
+                        sizelabel.text = size_str;
+                    }
+                    
+                    
                 }
             }
-                    
+
+        }
+
+        static void Postfix(UIComponent __instance)
+        {
+            if (__instance.GetType() == typeof(UIButton) && __instance.objectUserData != null)
+            {
+
+                
+                if (__instance.objectUserData.GetType() == typeof(BuildingInfo))
+                {
+                    __instance.eventMouseLeave -= HideButtonText;
+                    __instance.eventMouseLeave += HideButtonText;
+                    __instance.eventMouseEnter -= ShowButtonText;
+                    __instance.eventMouseEnter += ShowButtonText;
+                }
+            }
             
         }
     }
-
-
 
 }
