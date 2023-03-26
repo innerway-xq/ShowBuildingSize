@@ -23,9 +23,23 @@
                         uisprite.enabled = true;
                     }
 
-                    if (component.Find("UILabel") != null)
+                    UILabel sizelabel;
+                    if (component.Find("SizeLabel") != null)
                     {
-                        component.Find("UILabel").Hide();
+                        sizelabel = component.Find<UILabel>("SizeLabel");
+                    }
+                    else if (component.Find("UILabel") != null)
+                    {
+                        sizelabel = component.Find<UILabel>("UILabel");
+                    }
+                    else
+                    {
+                        sizelabel = null;
+                    }
+
+                    if (sizelabel != null)
+                    {
+                        sizelabel.Hide();
                     }
                 }
 
@@ -58,9 +72,23 @@
                         uisprite.enabled = false;
                     }
 
-                    if (component.Find("UILabel") == null)
+                    UILabel sizelabel;
+                    if (component.Find("SizeLabel") != null)
                     {
-                        UILabel sizelabel;
+                        sizelabel = component.Find<UILabel>("SizeLabel");
+                    }
+                    else if (component.Find("UILabel") != null)
+                    {
+                        sizelabel = component.Find<UILabel>("UILabel");
+                    }
+                    else
+                    {
+                        sizelabel = null;
+                    }
+
+                    if (sizelabel == null)
+                    {
+                        
                         sizelabel = component.AddUIComponent<UILabel>();
                         sizelabel.isVisible = true;
                         sizelabel.name = "SizeLabel";
@@ -70,7 +98,6 @@
                     }
                     else
                     {
-                        UILabel sizelabel = component.Find<UILabel>("UILabel");
                         sizelabel.Show();
                         sizelabel.text = size_str;
                     }
