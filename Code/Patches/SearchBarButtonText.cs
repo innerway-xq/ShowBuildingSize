@@ -42,7 +42,15 @@
                 {
                     UIButton uibutton = component.objectUserData as UIButton;
                     PrefabInfo prefabinfo = uibutton.objectUserData as PrefabInfo;
-                    string size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
+                    string size_str;
+                    if (ModSettings.SizeOrder)
+                    {
+                        size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
+                    }
+                    else
+                    {
+                        size_str = $"{prefabinfo.GetWidth()}x{prefabinfo.GetLength()}";
+                    }
 
                     UISprite uisprite = component.components[0] as UISprite;
                     if (uisprite != null)

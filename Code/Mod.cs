@@ -13,8 +13,8 @@
 
         public string Description => "Show each building's size in the panel.";
 
-        public override void SaveSettings() { }
+        public override void SaveSettings() => ModSettings.Save();
 
-        public override void LoadSettings() { }
+        public override void LoadSettings() => ModSettings.Load();
     }
 }

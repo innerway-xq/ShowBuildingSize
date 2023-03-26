@@ -64,6 +64,7 @@
     <Compile Include="Code\Mod.cs" />
     <Compile Include="Code\Patches\ButtonText.cs" />
     <Compile Include="Code\Patches\SearchBarButtonText.cs" />
+    <Compile Include="Code\Settings\ModSettings.cs" />
     <Compile Include="Code\Settings\OptionsPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
