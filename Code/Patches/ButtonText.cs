@@ -66,7 +66,7 @@
                         sizelabel.isVisible = true;
                         sizelabel.name = "SizeLabel";
                         sizelabel.textScale = 1f;
-                        sizelabel.relativePosition = new Vector3(0, component.height - 20);
+                        sizelabel.relativePosition = new Vector3(30, component.height - 20);
                         sizelabel.text = size_str;
                     }
                     else
