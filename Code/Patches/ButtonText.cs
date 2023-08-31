@@ -41,15 +41,52 @@
                 if (component.objectUserData != null && component.objectUserData.GetType() == typeof(BuildingInfo))
                 {
                     UIButton uibutton = component as UIButton;
-                    PrefabInfo prefabinfo = uibutton.objectUserData as PrefabInfo;
+                    BuildingInfo buildinginfo = uibutton.objectUserData as BuildingInfo;
                     string size_str;
+                    int length, width, main_length, main_width;
+                    length = main_length = buildinginfo.GetLength();
+                    width = main_width = buildinginfo.GetWidth();
+                    if (buildinginfo.m_subBuildings.Length > 0)
+                    {
+                        bool tolong = false, towide = false;
+                        for (int i = 0; i < buildinginfo.m_subBuildings.Length; i++)
+                        {
+                            BuildingInfo subbuildinginfo = buildinginfo.m_subBuildings[i].m_buildingInfo;
+                            if (subbuildinginfo.GetLength() != main_length && subbuildinginfo.GetWidth() == main_width && buildinginfo.m_subBuildings[i].m_position.z < 0)
+                            {
+                                tolong = true;
+                                break;
+                            }
+                            else if (subbuildinginfo.GetLength() == main_length && subbuildinginfo.GetWidth() != main_width && buildinginfo.m_subBuildings[i].m_position.x < 0)
+                            {
+                                towide = true;
+                                break;
+                            }
+                        }
+
+                        for (int i = 0; i < buildinginfo.m_subBuildings.Length; i++)
+                        {
+                            BuildingInfo subbuildinginfo = buildinginfo.m_subBuildings[i].m_buildingInfo;
+                            if ((buildinginfo.m_subBuildings[i].m_position.x * buildinginfo.m_subBuildings[i].m_position.z == 0) && (buildinginfo.m_subBuildings[i].m_position.x + buildinginfo.m_subBuildings[i].m_position.z != 0))
+                            {
+                                if (subbuildinginfo.GetLength() == main_length && towide)
+                                {
+                                    width += subbuildinginfo.GetWidth();
+                                }
+                                else if (subbuildinginfo.GetWidth() == main_width && tolong)
+                                {
+                                    length += subbuildinginfo.GetLength();
+                                }
+                            }
+                        }
+                    }
                     if (ModSettings.SizeOrder)
                     {
-                        size_str = $"{prefabinfo.GetLength()}x{prefabinfo.GetWidth()}";
+                        size_str = $"{length}x{width}";
                     }
                     else
                     {
-                        size_str = $"{prefabinfo.GetWidth()}x{prefabinfo.GetLength()}";
+                        size_str = $"{width}x{length}";
                     }
                     
 
