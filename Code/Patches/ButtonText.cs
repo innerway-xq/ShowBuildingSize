@@ -48,19 +48,31 @@
                     width = main_width = buildinginfo.GetWidth();
                     if (buildinginfo.m_subBuildings.Length > 0)
                     {
-                        bool tolong = false, towide = false;
+                        bool toolong = false, toowide = false;
                         for (int i = 0; i < buildinginfo.m_subBuildings.Length; i++)
                         {
                             BuildingInfo subbuildinginfo = buildinginfo.m_subBuildings[i].m_buildingInfo;
                             if (subbuildinginfo.GetLength() != main_length && subbuildinginfo.GetWidth() == main_width && buildinginfo.m_subBuildings[i].m_position.z < 0)
                             {
-                                tolong = true;
+                                toolong = true;
                                 break;
                             }
                             else if (subbuildinginfo.GetLength() == main_length && subbuildinginfo.GetWidth() != main_width && buildinginfo.m_subBuildings[i].m_position.x < 0)
                             {
-                                towide = true;
+                                toowide = true;
                                 break;
+                            }
+                            else if (subbuildinginfo.GetLength() == main_length && subbuildinginfo.GetWidth() == main_width)
+                            {
+                                if (buildinginfo.m_subBuildings[i].m_position.z < 0)
+                                {
+                                    toolong = true;
+                                    break;
+                                }
+                                else if (buildinginfo.m_subBuildings[i].m_position.x < 0)
+                                {
+                                    toowide = true;
+                                }
                             }
                         }
 
@@ -69,11 +81,11 @@
                             BuildingInfo subbuildinginfo = buildinginfo.m_subBuildings[i].m_buildingInfo;
                             if ((buildinginfo.m_subBuildings[i].m_position.x * buildinginfo.m_subBuildings[i].m_position.z == 0) && (buildinginfo.m_subBuildings[i].m_position.x + buildinginfo.m_subBuildings[i].m_position.z != 0))
                             {
-                                if (subbuildinginfo.GetLength() == main_length && towide)
+                                if (subbuildinginfo.GetLength() == main_length && toowide)
                                 {
                                     width += subbuildinginfo.GetWidth();
                                 }
-                                else if (subbuildinginfo.GetWidth() == main_width && tolong)
+                                else if (subbuildinginfo.GetWidth() == main_width && toolong)
                                 {
                                     length += subbuildinginfo.GetLength();
                                 }
