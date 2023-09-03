@@ -46,7 +46,7 @@
                     int length, width, main_length, main_width;
                     length = main_length = buildinginfo.GetLength();
                     width = main_width = buildinginfo.GetWidth();
-                    if (buildinginfo.m_subBuildings.Length > 0)
+                    if (buildinginfo.m_subBuildings != null && buildinginfo.m_subBuildings.Length > 0)
                     {
                         bool toolong = false, toowide = false;
                         for (int i = 0; i < buildinginfo.m_subBuildings.Length; i++)
